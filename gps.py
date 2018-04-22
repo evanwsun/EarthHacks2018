@@ -45,7 +45,7 @@ def getData():
         prevTime = int(times[i-1])
         tDiff = abs(curTime-prevTime)/60.0/60.0/1000
         a = (sin(yDiff / 2))**2 + cos(prevYCor)*cos(curYCor)*(sin(xDiff/2))**2
-        if ((1-a) > 0 and 1-a < 1):
+        if ((1-a) > 0 and (1-a) < 1):
             c = 2*atan2(a**0.5, (1 - a)**0.5)
             dist = 3961 * c
             speed = dist/tDiff
