@@ -1,4 +1,4 @@
-# earthxhacks2018
+# frontend
 
 > A Vue.js project
 
