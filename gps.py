@@ -51,7 +51,7 @@ def getData():
             speed = dist/tDiff
             if (speed < 5):
                 walkDist += dist
-                df.loc[len(df)]=[curTime, dist, "Walk", curYCor, curXCor]
+                df.loc[len(df)] = [curTime, dist, "Walk", curYCor, curXCor]
             elif(speed < 15):
                 bikeDist += dist
                 df.loc[len(df)] = [curTime, dist, "Bike", curYCor, curXCor]
@@ -72,13 +72,13 @@ def getBikeDistance():
     return bikeDist
 
 def getDistance(month, type):
-    epochHigh = month + 2628000
+    epochHigh = month + 2628000000
     epochLow = month
-    return df[(int(df.Time) < epochHigh) & (int(df.Time) > epochLow) & (str(df.Type) == str(type))].Distance.sum()
+    return df[(df.Time < epochHigh) & (df.Time > epochLow) & (df.Type == str(type))].Distance.sum()
 
 def getYear(year, type):
     epochLow = year
-    months = {}
+    months = []
     for i in range(1,13):
         months.append(getDistance(epochLow,type))
         epochLow += 2628000000
@@ -89,4 +89,3 @@ def __init__(filename):
     setFileName(filename)
     getData()
 
-getData()

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 class FastFood:
     def getCount(self, m,y):
         self.currentYear = self.xf[self.xf['Year'] == str(y)]
-        self.currentMonth = self.currentYear[self.currentYear['Month'] == str(m) ]
+        self.currentMonth = self.currentYear[self.currentYear['Month'] == str(m)]
         return(len(self.currentMonth.index))
 
     def getSum(self, m,y):
@@ -57,16 +57,16 @@ class FastFood:
             #print('Sum = $'+ str(getSum(m,y))+ '\n')
 
 
-    def printCountGraph(self):
+    def printCountGraph(self, ax):
         self.graph.index= self.graph.Month+' '+self.graph.Year
-        ax = self.graph[['Month','Count']].plot(kind='bar', color='c', title ="Frequency of Fast Food Consumption", figsize=(10, 5), legend=True, fontsize=12)
+        ax = self.graph[['Month','Count']].plot(kind='bar', color='c', title ="Frequency of Fast Food Consumption", figsize=(10, 5), legend=True, fontsize=12, ax = ax)
         ax.set_xlabel("Month", fontsize=8)
         ax.set_ylabel("# Times per Month", fontsize=12)
         return ax
 
-    def printSumGraph(self):
+    def printSumGraph(self, ax):
         self.graph.index = self.graph.Month + ' ' + self.graph.Year
-        ax = self.graph[['Month', 'Sum']].plot(kind='bar', color='c',title="Amount Spent on Fast Food", figsize=(10, 5), legend=True, fontsize=12)
+        self.graph[['Month', 'Sum']].plot(kind='bar', color='c',title="Amount Spent on Fast Food", figsize=(10, 5), legend=True, fontsize=12, ax = ax)
         ax.set_xlabel("Month", fontsize=8)
         ax.set_ylabel("Amount Spent ($)", fontsize=12)
         return ax
