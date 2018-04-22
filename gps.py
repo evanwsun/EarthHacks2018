@@ -45,19 +45,19 @@ def getData():
         prevTime = int(times[i-1])
         tDiff = abs(curTime-prevTime)/60.0/60.0/1000
         a = (sin(yDiff / 2))**2 + cos(prevYCor)*cos(curYCor)*(sin(xDiff/2))**2
-        if ((1-a) > 0 and 1-a < 1):
+        if ((1-a) > 0 and (1-a) < 1):
             c = 2*atan2(a**0.5, (1 - a)**0.5)
             dist = 3961 * c
             speed = dist/tDiff
             if (speed < 5):
                 walkDist += dist
-                df.append([curTime, dist, "Walk", curYCor, curXCor])
+                df.loc[len(df)]=[curTime, dist, "Walk", curYCor, curXCor]
             elif(speed < 15):
                 bikeDist += dist
-                df.append([curTime, dist, "Bike", curYCor, curXCor])
+                df.loc[len(df)] = [curTime, dist, "Bike", curYCor, curXCor]
             else:
                 driveDist += dist
-                df.append([curTime, dist, "Drive", curYCor, curXCor])
+                df.loc[len(df)] = [curTime, dist, "Drive", curYCor, curXCor]
 
 def getTotalDistance():
     return walkDist+bikeDist+driveDist
@@ -74,7 +74,7 @@ def getBikeDistance():
 def getDistance(month, type):
     epochHigh = month + 2628000
     epochLow = month
-    return df[(int(df.Time) < epochHigh) & (int(df.Time) > epochLow) & (df.Type == type)].Distance.sum()
+    return df[(int(df.Time) < epochHigh) & (int(df.Time) > epochLow) & (str(df.Type) == str(type))].Distance.sum()
 
 def getYear(year, type):
     epochLow = year
