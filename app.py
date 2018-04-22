@@ -14,6 +14,122 @@ import json
 import datetime
 app = Flask(__name__)
 
+def dashFig():
+    base_chart = {
+        "values": [40, 15, 15, 15, 15],
+        "labels": ["-", "0", "33", "66", "100"],
+        "domain": {"x": [0, .48]},
+        "marker": {
+            "colors": [
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+                'rgb(255, 255, 255)',
+            ],
+            "line": {
+                "width": 1
+            }
+        },
+        "name": "Gauge",
+        "hole": .4,
+        "type": "pie",
+        "direction": "clockwise",
+        "rotation": 108,
+        "showlegend": False,
+        "hoverinfo": "none",
+        "textinfo": "label",
+        "textposition": "outside"
+    }
+    meter_chart = {
+        "values": [30, 10, 10, 10],
+        "labels": ["Insurance Level", "High", "Medium", "Low"],
+        "marker": {
+            'colors': [
+                'rgb(255, 255, 255)',
+                'rgb(255,0,0,)',
+                'rgb(255,255,0)',
+                'rgb(0,255,0)'
+            ]
+        },
+        "domain": {"x": [0, 0.48]},
+        "name": "Gauge",
+        "hole": .3,
+        "type": "pie",
+        "direction": "clockwise",
+        "rotation": 90,
+        "showlegend": False,
+        "textinfo": "label",
+        "textposition": "inside",
+        "hoverinfo": "none",
+        'shapes': [
+            {
+                'type': 'path',
+                'path': 'M 0.235 0.5 L 0.24 0.62 L 0.245 0.5 Z',
+                'fillcolor': 'rgba(44, 160, 101, 0.5)',
+                'line': {
+                    'width': 0.5
+                },
+                'xref': 'paper',
+                'yref': 'paper'
+            }
+        ]
+    }
+    layout = {
+        'autosize':False,
+        'width':150,
+        'height':150,
+        'margin': {
+            'l': 5,
+            'r': 5,
+            'b': 0,
+            't': 5,
+            'pad':5
+        },
+        'xaxis': {
+            'showticklabels': False,
+            'autotick': False,
+            'showgrid': False,
+            'zeroline': False,
+        },
+        'yaxis': {
+            'showticklabels': False,
+            'autotick': False,
+            'showgrid': False,
+            'zeroline': False,
+        },
+        'shapes': [
+            {
+                'type': 'path',
+                'path': 'M 0.235 0.5 L 0.24 0.65 L 0.245 0.5 Z',
+                'fillcolor': 'rgba(44, 160, 101, 0.5)',
+                'line': {
+                    'width': 0.5
+                },
+                'xref': 'paper',
+                'yref': 'paper'
+            }
+        ],
+        'annotations': [
+            {
+                'xref': 'paper',
+                'yref': 'paper',
+                'x': 0.23,
+                'y': 0.45,
+                'text': '12',
+                'showarrow': False
+            }
+        ]
+    }
+
+    # we don't want the boundary now
+    base_chart['marker']['line']['width'] = 0
+
+    return {"data": [base_chart, meter_chart],
+           "layout": layout}
+
+
+
 def getFitness():
     rng = pd.date_range('1/1/2011', periods=7500, freq='H')
     ts = pd.Series(np.random.randn(len(rng)), index=rng)
@@ -29,7 +145,7 @@ def getFitness():
                 ),
             ],
             layout=dict(
-                title='Year Progress'
+                title='Yearly Active Distance'
             )
         ),
 
@@ -46,7 +162,8 @@ def getFitness():
             layout=dict(
                    title='Method of Transportation, April'
             )
-        )
+        ),
+        dashFig()
 
     ]
 
@@ -67,6 +184,8 @@ def getStatsGraphs():
         stepsAge = pd.read_csv('steps_by_age_gender.csv')
         stepsAge = stepsAge[stepsAge.gender == "male"]
         stepsAge['miles'] = stepsAge['steps_mean']*2.5/5280 * 30
+
+        fastfoodstat = pd.read_csv('fastfood.csv')
         graphs = [
             dict(
                 data=[
@@ -76,7 +195,10 @@ def getStatsGraphs():
                         type='bar',
                         marker = dict(
                         color=['rgba(204,204,204,1)',
-                               'rgba(204,204,204,1)', 'rgba(222,45,38,0.8)','rgba(204,204,204,1)',
+                               'rgba(204,204,204,1)','rgba(204,204,204,1)',
+                               'rgba(204,204,204,1)', 'rgba(222,45,38,0.8)','rgba(204,204,204,1)','rgba(204,204,204,1)',
+                               'rgba(204,204,204,1)',
+                               'rgba(204,204,204,1)',
                                'rgba(204,204,204,1)']),
                                 ),
                 ],
@@ -84,24 +206,39 @@ def getStatsGraphs():
                     title='Average rate of obesity based on number of steps'
                 )
             ),
-
             dict(
                 data=[
                     dict(
                         x=stepsAge['age'],
-                        y=stepsAge['miles'],
+                        y=stepsAge['steps_mean'],
                         type='bar',
                         marker=dict(
-                        color=['rgba(222,45,38,0.8)','rgba(204,204,204,1)',
-                               'rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                            color=['rgba(222,45,38,0.8)', 'rgba(204,204,204,1)', 'rgba(204,204,204,1)','rgba(204,204,204,1)','rgba(204,204,204,1)', 'rgba(204,204,204,1)',
+                                   'rgba(204,204,204,1)']),
+
+                    ),
+                ],
+                layout=dict(
+                    title='Average Fast Food Frequency'
+                )
+            ),
+            dict(
+                data=[
+                    dict(
+                        x=fastfoodstat['Frequency'],
+                        y=fastfoodstat['Obesity Prevalence'],
+                        type='bar',
+                        marker=dict(
+                        color=['rgba(204,204,204,1)','rgba(222,45,38,0.8)','rgba(204,204,204,1)',
                                'rgba(204,204,204,1)']),
 
                     ),
                 ],
                 layout=dict(
-                    title='Average miles walked per month'
+                    title='Average Fast Food Frequency'
                 )
-            )
+            ),
+            dashFig()
 
         ]
 
@@ -126,8 +263,13 @@ def output():
 
 @app.route('/stats')
 def statsOutput():
+    fastfreq = fastFood1.getCount('04', '18')
+    print(fastfreq)
+    totalSpent = fastFood1.getSum('04', '18')
+    print (totalSpent)
+    aprilWalking = gps.getDistance(1522558800000, "Walk")
     statsGraphs = getStatsGraphs()
-    return render_template('charts2.html',timestamp = datetime.datetime.today(), graphJSON = statsGraphs[1], ids = statsGraphs[0])
+    return render_template('charts2.html', freq = fastfreq, spent = totalSpent, miles = aprilWalking, timestamp = datetime.datetime.today(), graphJSON = statsGraphs[1], ids = statsGraphs[0])
 
 @app.route('/FastDollars.png')
 def figure():
@@ -159,5 +301,12 @@ def figure1():
 if __name__ == '__main__':
     # run!
     fastFood1 =fastFood.FastFood('transactions(1).csv')
-    gps.__init__('Location History.json')
+    gps.__init__('practice.json')
     app.run()
+
+
+
+
+
+
+

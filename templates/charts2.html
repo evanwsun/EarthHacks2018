@@ -34,7 +34,7 @@
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="How you stack up">
           <a class="nav-link" href="stats">
             <i class="fa fa-fw fa-dashboard"></i>
-            <span class="nav-link-text">How you stack up</span>
+            <span class="nav-link-text">Global Placement</span>
           </a>
         </li>
       </ul>
@@ -138,32 +138,43 @@
           <div class="card-header">
           <i class="fa fa-area-chart"></i>Current Stats - April</div>
         <div class="card-body">
-          <table width = '100%' height = '100%'>
+         <table width = '100%' height = '100%'>
             <tr>
               <td>
                 <h3>Fast Food Budget</h3>
-                <p>Total Spent: {{spent}}</p>
-                <p>Frequency: {{freq}}</p>
               </td>
               <td>
                 <h3>Fitness</h3>
-                <p>Miles walked: {{miles}}</p>
               </td>
               <td>
                 <h3>Current Rating</h3>
-                <img src = "{{url_for('static', filename='speed-meter.jpg')}}" width="100" height="100">
+
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p>Total Spent: ${{spent}}</p>
+                <p>Frequency: {{freq}}</p>
+              </td>
+              <td>
+                <p3>Miles walked: {{miles}}</p3>
+              </td>
+              <td>
+                <div id = 'graph-3' align = 'center'></div>
               </td>
             </tr>
           </table>
       </div>
       <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-area-chart"></i>Fast Food Consumption</div>
+          <i class="fa fa-area-chart"></i>Fast Food Consumption Statistics</div>
         <div class="card-body">
           <table>
             <tr>
-              <td><div id = "Food1"><img src ='/FastDollars.png'width="800" height="400"></div></td>
-              <td><div id = "Food2"><img src ='/FastFreq.png'width="800" height="400"></div></td>
+                <td>
+                <div id = 'graph-2'></div>
+              </td>
+
             </tr>
           </table>
 
@@ -178,9 +189,6 @@
             <tr>
               <td>
                     <div id = 'graph-0'></div>
-              </td>
-              <td>
-                <div id = 'graph-2'></div>
               </td>
               <td>
                     <div id = 'graph-1'></div>
