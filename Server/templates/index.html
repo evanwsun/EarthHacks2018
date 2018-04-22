@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename='css/main.css')}}">
+<body>
+
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+    Logo
+  </div>
+  <div class="w3-display-middle">
+    <h1 class="w3-jumbo w3-animate-top">ASL Translation Project</h1>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+    <a href = "#asl"><p class="w3-large w3-center">Click to begin</p></a>
+  </div>s
+</div>
+
+<div class = " w3-display-container w3-animate-opacity" id = "asl">
+<div class="w3-display-middle">
+<table>
+  <tbody>
+  <tr>
+    <td><div id="my_camera" style="width:320px; height:240px;"></div></td>
+    <td>
+    <div id="my_result"> <img id="ItemPreview" src="" /></div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+  <div align = 'center' id = 'screenshotButton'>
+    <a href="javascript:void(take_snapshot())">Take Snapshot</a>
+  </div>
+<script src="{{ url_for('static', filename='js/webcamjs/webcam.js')}}"></script>
+
+<script language="JavaScript">
+    Webcam.attach( '#my_camera' );
+    Webcam.set({
+        width: 640,
+        height: 480,
+        dest_width: 320,
+        dest_height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 50,
+        force_flash: false
+    })
+    var div = document.getElementById('my_result');
+    var outputImg = document.createElement('img');
+    div.appendChild(outputImg);
+    </script>
+  <script>
+    var myVar = setInterval(take_snapshot, 250);
+    function take_snapshot() {
+        Webcam.snap( function(data_uri) {
+
+            Webcam.upload(data_uri, "/ASL_translate", function(response, data){
+
+                // create an image
+
+                outputImg.src = 'data:image/png;base64,'+data;
+
+            })
+
+        })
+    }
+
+
+</script>
+
+  </div>
+</div>
+
+</body>
+</html>
