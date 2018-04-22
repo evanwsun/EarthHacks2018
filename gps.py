@@ -34,7 +34,6 @@ def getData():
             yCor.append(location.get("longitudeE7") / 1E7)
             times.append(location.get("timestampMs"))
 
-
     for i in range(1,len(xCor)):
         curXCor = radians(xCor[i])
         prevXCor = radians(xCor[i-1])
@@ -53,7 +52,7 @@ def getData():
             if (speed < 5):
                 walkDist += dist
                 df.append([curTime, dist, "Walk", curYCor, curXCor])
-            elif(speed <15):
+            elif(speed < 15):
                 bikeDist += dist
                 df.append([curTime, dist, "Bike", curYCor, curXCor])
             else:
@@ -73,11 +72,21 @@ def getBikeDistance():
     return bikeDist
 
 def getDistance(month, type):
-    epochHigh = month
+    epochHigh = month + 2628000
     epochLow = month
-    return df[(df.Time < epochHigh) & (df.Time > epochLow) & (df.Type == type)].Distance.sum()
+    return df[(int(df.Time) < epochHigh) & (int(df.Time) > epochLow) & (df.Type == type)].Distance.sum()
+
+def getYear(year, type):
+    epochLow = year
+    months = {}
+    for i in range(1,13):
+        months.append(getDistance(epochLow,type))
+        epochLow += 2628000000
+    return months
 
 
 def __init__(filename):
     setFileName(filename)
     getData()
+
+getData()
