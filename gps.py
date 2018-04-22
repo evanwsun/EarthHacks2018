@@ -1,12 +1,10 @@
 import json
 from math import sin,cos,atan2,sqrt,radians
 import pandas as pd
+import os
 
-global walkDist
 walkDist = 0
-global driveDist
 driveDist = 0
-global bikeDist
 bikeDist = 0
 xCor = []
 yCor = []
@@ -14,21 +12,28 @@ times = []
 distance = 0
 xDiff = 0
 yDiff = 0
-fileName = "history.json"
+global filename
+fileName = "practice.json"
+
+df = pd.DataFrame( columns=['Time', 'Distance', 'Type', 'Longitude', 'Latitude'])
 
 def setFileName(x):
+    global fileName
     fileName = x
 
 def getData():
-    with open(fileName) as data:
+    global df
+    global walkDist
+    global driveDist
+    global bikeDist
+    with open(os.path.abspath(fileName)) as data:
         d = json.load(data)
         jData = d["locations"]
         for location in jData:
             xCor.append(location.get("latitudeE7") / 1E7)
             yCor.append(location.get("longitudeE7") / 1E7)
             times.append(location.get("timestampMs"))
-        df = pd.DataFrame({'Longitude': xCor, 'Latitude': yCor, 'Time': times})
-        print(df)
+
 
     for i in range(1,len(xCor)):
         curXCor = radians(xCor[i])
@@ -47,10 +52,13 @@ def getData():
             speed = dist/tDiff
             if (speed < 5):
                 walkDist += dist
+                df.append([curTime, dist, "Walk", curYCor, curXCor])
             elif(speed <15):
                 bikeDist += dist
+                df.append([curTime, dist, "Bike", curYCor, curXCor])
             else:
                 driveDist += dist
+                df.append([curTime, dist, "Drive", curYCor, curXCor])
 
 def getTotalDistance():
     return walkDist+bikeDist+driveDist
@@ -64,4 +72,12 @@ def getDriveDistance():
 def getBikeDistance():
     return bikeDist
 
-getData()
+def getDistance(month, type):
+    epochHigh = month
+    epochLow = month
+    return df[(df.Time < epochHigh) & (df.Time > epochLow) & (df.Type == type)].Distance.sum()
+
+
+def __init__(filename):
+    setFileName(filename)
+    getData()
