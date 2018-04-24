@@ -29,20 +29,19 @@ def getData():
     with open(os.path.abspath(fileName)) as data:
         d = json.load(data)
         jData = d["locations"]
-        for location in jData:
-            xCor.append(location.get("latitudeE7") / 1E7)
-            yCor.append(location.get("longitudeE7") / 1E7)
-            times.append(location.get("timestampMs"))
-
-    for i in range(1,len(xCor)):
-        curXCor = radians(xCor[i])
-        prevXCor = radians(xCor[i-1])
-        curYCor = radians(yCor[i])
-        prevYCor = radians(yCor[i-1])
+        jData = jData[:100000]
+    for i in range(1,len(jData)):
+        print(i*1.0 / len(jData))
+        location = jData[i]
+        prevLocation = jData[i-1]
+        curXCor = radians((location.get("latitudeE7") / 1E7))
+        prevXCor = radians((prevLocation.get("latitudeE7") / 1E7))
+        curYCor = radians(location.get("longitudeE7") / 1E7)
+        prevYCor =  radians(prevLocation.get("longitudeE7") / 1E7)
         yDiff = abs(curXCor-prevXCor)
         xDiff = abs(curYCor - prevYCor)
-        curTime = int(times[i])
-        prevTime = int(times[i-1])
+        curTime = int(location.get("timestampMs"))
+        prevTime = int(prevLocation.get("timestampMs"))
         tDiff = abs(curTime-prevTime)/60.0/60.0/1000
         a = (sin(yDiff / 2))**2 + cos(prevYCor)*cos(curYCor)*(sin(xDiff/2))**2
         if ((1-a) > 0 and (1-a) < 1):
@@ -94,6 +93,8 @@ def getPercentages(year):
     print(driving)
     print("Total" + str(total))
     return [walking, biking, driving, total]
+
+
 
 
 def __init__(filename):
