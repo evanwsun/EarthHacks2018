@@ -29,6 +29,7 @@ def getData():
     with open(os.path.abspath(fileName)) as data:
         d = json.load(data)
         jData = d["locations"]
+        jData = jData[:100000]
     for i in range(1,len(jData)):
         print(i*1.0 / len(jData))
         location = jData[i]

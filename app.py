@@ -116,7 +116,7 @@ def dashFig():
                 'yref': 'paper',
                 'x': 0.23,
                 'y': 0.45,
-                'text': '12',
+                'text': '',
                 'showarrow': False
             }
         ]
@@ -160,7 +160,7 @@ def getFitness():
                 },
             ],
             layout=dict(
-                   title='Method of Transportation, April'
+                   title='Method of Transportation, Yearly 2018'
             )
         ),
         dashFig()
@@ -301,7 +301,7 @@ def figure1():
 if __name__ == '__main__':
     # run!
     fastFood1 =fastFood.FastFood('transactions(1).csv')
-    gps.__init__('practice.json')
+    gps.__init__('Location History.json')
     app.run()
 
 
